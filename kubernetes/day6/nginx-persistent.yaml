@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: nginx-storage
+
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+
+    volumeMounts:
+    - mountPath: /usr/share/nginx/html
+      name: web-storage
+
+  volumes:
+  - name: web-storage
+    persistentVolumeClaim:
+      claimName: pvc-demo
