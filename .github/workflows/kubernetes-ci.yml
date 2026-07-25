@@ -1,0 +1,43 @@
+name: Kubernetes CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Verify Helm Installation
+        run: helm version
+
+      - name: Helm Lint
+        run: |
+          cd kubernetes/day9/enterprise-app
+          helm lint .
+
+      - name: List Kubernetes YAML Files
+        run: |
+          find kubernetes -name "*.yaml" -o -name "*.yml"
+
+      - name: Validate Kubernetes Manifests
+        run: |
+          find kubernetes -type f \( -name "*.yaml" -o -name "*.yml" \) \
+          -exec kubectl apply --dry-run=client --validate=true -f {} \;
+
+      - name: Success
+        run: echo "CI pipeline completed successfully."
