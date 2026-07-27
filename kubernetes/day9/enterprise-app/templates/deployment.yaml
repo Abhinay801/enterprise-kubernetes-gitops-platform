@@ -76,3 +76,21 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+env:
+  - name: APP_NAME
+    valueFrom:
+      configMapKeyRef:
+        name: enterprise-config
+        key: APP_NAME
+
+  - name: ENVIRONMENT
+    valueFrom:
+      configMapKeyRef:
+        name: enterprise-config
+        key: ENVIRONMENT
+
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: enterprise-secret
+        key: DB_PASSWORD
